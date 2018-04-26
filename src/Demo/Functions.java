@@ -1,4 +1,4 @@
-package Demo;
+package mol2inchi;
 
 import java.io.FileReader;
 import java.io.IOException;
