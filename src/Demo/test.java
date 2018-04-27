@@ -10,11 +10,11 @@ import org.openscience.cdk.interfaces.IBond;
 import com.google.common.collect.ListMultimap;
 
 public class test {
-	public static void main(String[] args) throws CDKException, IOException, CloneNotSupportedException {
-		String path= "...\\mollist.sdf"; //The path of the sdf files including the molecule list
+ public static void main(String[] args) throws CDKException, IOException, CloneNotSupportedException {
+	String path= "...\\mollist.sdf"; //The path of the sdf files including the molecule list
 		
-		//Simply creating an atom container.
-		IAtomContainer acontainer = new org.openscience.cdk.AtomContainer();
+	//Simply creating an atom container.
+	IAtomContainer acontainer = new org.openscience.cdk.AtomContainer();
 
         acontainer.addAtom(new Atom("C")); //1
         acontainer.addAtom(new Atom("C")); //2
@@ -36,27 +36,26 @@ public class test {
         acontainer.addBond(1, 2, IBond.Order.SINGLE);
         
         
-		//Reading the sdf file and creating and indexing atomcontainers
-		Map<Integer, IAtomContainer> acs=Functions.sdf2ac(path);
+	//Reading the sdf file and creating and indexing atomcontainers
+	Map<Integer, IAtomContainer> acs=Functions.sdf2ac(path);
+			
+	//Classifying  molecules based on their InChIs
+	ListMultimap inch=Functions.inchiclass(path);
 		
+	//Generating generic SMILES for the atomcontainer; the from SMILES to InChI.
+	String smiles= Functions.ac2smi(acontainer);
+	String inchi= Functions.inchi(smiles);
 		
-		//Classifying  molecules based on their InChIs
-		ListMultimap inch=Functions.inchiclass(path);
+	//From the source file, directly the list of InChIs can be also generated 
+	//with atomcontainer indices.
+	Map<Integer, String> map1= Functions.mol2inchilist(path);
 		
-		//Generating generic SMILES for the atomcontainer; the from SMILES to InChI.
-		String smiles= Functions.ac2smi(acontainer);
-		String inchi= Functions.inchi(smiles);
+	//Classify molecules based on their InChIs. Returning a map includes index
+	//of atomcontainers and their InChIs as pairs. 
+	ListMultimap<String, Integer> map2= Functions.inchiclass(path);
 		
-		//From the source file, directly the list of InChIs can be also generated 
-		//with atomcontainer indices.
-		Map<Integer, String> map1= Functions.mol2inchilist(path);
-		
-		//Classify molecules based on their InChIs. Returning a map includes index
-		//of atomcontainers and their InChIs as pairs. 
-		ListMultimap<String, Integer> map2= Functions.inchiclass(path);
-		
-		//The identical molecules are detected from the InChI classification map.
-		ListMultimap<String, IAtomContainer> equals= Functions.equalones(map2, path);
+	//The identical molecules are detected from the InChI classification map.
+	ListMultimap<String, IAtomContainer> equals= Functions.equalones(map2, path);
 	}
 
 }
